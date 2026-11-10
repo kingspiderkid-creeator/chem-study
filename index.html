@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Compound Builder</title>
+<meta name="description" content="Drag elements from the periodic table to build molecules and compounds. A study tool for chemistry and biology students.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9A%97%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<style>
+:root{--bg:#eef2f6;--card:#fff;--ink:#14202b;--mute:#566878;--line:#c0ccd8;--acc:#0b6e6e;--accInk:#fff;--tint:#dff1ef;--tl:86%;--bl:55%;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1620;--card:#16222e;--ink:#e6edf3;--mute:#93a4b4;--line:#2a3a4a;--acc:#4fd1c5;--accInk:#06201f;--tint:#10332f;--tl:24%;--bl:45%}}
+:root[data-theme="dark"]{--bg:#0e1620;--card:#16222e;--ink:#e6edf3;--mute:#93a4b4;--line:#2a3a4a;--acc:#4fd1c5;--accInk:#06201f;--tint:#10332f;--tl:24%;--bl:45%}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+sub{font-size:.62em;line-height:0}
+.wrap{max-width:1000px;margin:0 auto;padding:22px 14px 48px}
+h1{font:700 clamp(1.8rem,5vw,2.6rem)/1.1 Georgia,"Times New Roman",serif;margin:0 0 6px}
+.lede{margin:0 0 16px;color:var(--mute);max-width:64ch}
+.tablebox{overflow-x:auto;padding-bottom:6px}
+#pt{display:grid;grid-template-columns:repeat(18,40px);grid-template-rows:repeat(7,40px) 10px repeat(2,40px);gap:2px;min-width:max-content}
+.t,.ct{background:hsl(var(--h) 60% var(--tl));color:var(--ink);font-family:inherit}
+.t{border:1px solid hsl(var(--h) 40% var(--bl));border-radius:4px;padding:0;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:grab;user-select:none;touch-action:manipulation}
+.t small{font-size:.55rem;line-height:1;opacity:.75}
+.t b{font:600 .95rem/1.1 Georgia,serif}
+.t:hover,.ct[data-z]:hover{outline:2px solid var(--acc);z-index:2}
+button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+#legend{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:.78rem;color:var(--mute);margin:8px 0 18px}
+#legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:4px;vertical-align:-1px;background:hsl(var(--h) 60% var(--tl));border:1px solid hsl(var(--h) 40% var(--bl))}
+.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+#chal{flex:1;min-width:200px}
+#chal.ok{color:var(--acc);font-weight:600}
+.btn{font:600 .92rem inherit;font-family:inherit;border-radius:6px;padding:8px 14px;border:1.5px solid var(--acc);background:transparent;color:var(--acc);cursor:pointer}
+.btn.main{background:var(--acc);color:var(--accInk)}
+.work{display:grid;gap:16px;grid-template-columns:1fr}
+@media (min-width:820px){.work{grid-template-columns:1.3fr 1fr;align-items:start}}
+#bench{position:relative;height:320px;background:var(--card);border:2px dashed var(--line);border-radius:10px;overflow:hidden}
+#bench.over{border-color:var(--acc);background:var(--tint)}
+#hint{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;margin:0;color:var(--mute);text-align:center;padding:20px;pointer-events:none}
+#hint[hidden]{display:none}
+#bonds{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none}
+#bonds line{stroke:var(--ink);stroke-width:5;stroke-linecap:round;opacity:.55}
+.atom{position:absolute;width:64px;height:64px;margin:-32px 0 0 -32px;border-radius:50%;color:var(--ink);cursor:grab;touch-action:none;user-select:none;z-index:2;line-height:0}
+.atom svg{display:block;pointer-events:none}
+.orb{transform-origin:0 0;animation:spin linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.orb{animation:none}}
+.tabs{display:flex;gap:4px;border-bottom:2px solid var(--line);margin-bottom:16px}
+.tabs button{font:600 1rem inherit;font-family:inherit;background:none;border:0;border-bottom:3px solid transparent;margin-bottom:-2px;padding:8px 14px;color:var(--mute);cursor:pointer}
+.tabs button[aria-selected="true"]{color:var(--acc);border-bottom-color:var(--acc)}
+h2.sec{font:600 1.1rem Georgia,serif;margin:18px 0 10px}
+.cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(44px,1fr));gap:4px}
+.ct{border:1px solid hsl(var(--h) 40% var(--bl));border-radius:4px;height:46px;padding:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ct small{font-size:.55rem;line-height:1;opacity:.75}
+.ct b{font:600 .95rem/1.1 Georgia,serif}
+.ct.lock,.card.lock{background:transparent;border:1px dashed var(--line);color:var(--mute)}
+.mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.mgrid .card{margin:0}
+#tip{position:fixed;z-index:60;width:310px;max-width:calc(100vw - 16px);background:var(--card);border:1.5px solid var(--line);border-radius:10px;padding:12px;box-shadow:0 8px 28px rgba(0,0,0,.28);pointer-events:none;display:grid;grid-template-columns:96px 1fr;gap:6px 12px;font-size:.86rem;line-height:1.4}
+#tip[hidden],#toast[hidden]{display:none}
+#tip img.spec{width:96px;height:96px;object-fit:cover;border-radius:8px;display:block}
+#tip svg.spec{width:96px;height:96px;border-radius:8px;display:block}
+#tip p{grid-column:1/-1;margin:2px 0 0}
+#tip .mute{font-size:.82rem}
+#toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--acc);color:var(--accInk);padding:9px 18px;border-radius:99px;font-weight:600;z-index:70}
+.ghost{position:fixed;z-index:50;pointer-events:none;opacity:.85;transform:translate(-50%,-50%);margin:0}
+.card{background:var(--card);border:1.5px solid var(--line);border-radius:8px;padding:12px 14px;margin-bottom:10px}
+.nm{font:600 1.15rem Georgia,serif}
+.fm{font:1.1rem Georgia,serif;margin-left:8px;color:var(--mute)}
+.badge{display:inline-block;font-size:.78rem;font-weight:600;color:var(--acc);border:1.5px solid var(--acc);border-radius:99px;padding:0 9px;margin-left:8px}
+.card p{margin:6px 0 0;font-size:.92rem}
+.mute{color:var(--mute);font-size:.92rem}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Compound Builder</h1>
+<p class="lede">Drag elements from the periodic table into the bench. Then drag atoms until they touch to bond them, and the bench names what you’ve made. On a phone, tap an element to add it. Hover over any element to see what it looks like. Drag an atom off the bench or double-click it to remove it. Everything you discover is saved in the Collection tab.</p>
+<div class="tabs" role="tablist"><button role="tab" id="tb" aria-selected="true">Build</button><button role="tab" id="tc" aria-selected="false">Collection <span id="cnt"></span></button></div>
+<div id="pBuild">
+<div class="tablebox"><div id="pt" role="group" aria-label="Periodic table"></div></div>
+<div id="legend"></div>
+<div class="bar"><span id="chal" class="mute">Want a goal? Try a challenge.</span><button class="btn" id="ch">Challenge me</button><button class="btn" id="hn" hidden>Hint</button><button class="btn" id="clr">Clear bench</button></div>
+<div class="work"><div id="bench"><svg id="bonds"></svg><p id="hint">Drop elements here</p></div><div id="res" aria-live="polite"></div></div>
+</div>
+<div id="pCol" hidden></div>
+</div>
+<div id="tip" hidden></div><div id="toast" role="status" hidden></div>
+<script>
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const load=u=>fetch(u).then(r=>{if(!r.ok)throw new Error(u+" "+r.status);return r.json()});
+Promise.all([load("data/elements.json"),load("data/compounds.json")]).then(([EL,CP])=>{
+const SYM="H He Li Be B C N O F Ne Na Mg Al Si P S Cl Ar K Ca Sc Ti V Cr Mn Fe Co Ni Cu Zn Ga Ge As Se Br Kr Rb Sr Y Zr Nb Mo Tc Ru Rh Pd Ag Cd In Sn Sb Te I Xe Cs Ba La Ce Pr Nd Pm Sm Eu Gd Tb Dy Ho Er Tm Yb Lu Hf Ta W Re Os Ir Pt Au Hg Tl Pb Bi Po At Rn Fr Ra Ac Th Pa U Np Pu Am Cm Bk Cf Es Fm Md No Lr Rf Db Sg Bh Hs Mt Ds Rg Cn Nh Fl Mc Lv Ts Og".split(" ");
+const NM="Hydrogen,Helium,Lithium,Beryllium,Boron,Carbon,Nitrogen,Oxygen,Fluorine,Neon,Sodium,Magnesium,Aluminum,Silicon,Phosphorus,Sulfur,Chlorine,Argon,Potassium,Calcium,Scandium,Titanium,Vanadium,Chromium,Manganese,Iron,Cobalt,Nickel,Copper,Zinc,Gallium,Germanium,Arsenic,Selenium,Bromine,Krypton,Rubidium,Strontium,Yttrium,Zirconium,Niobium,Molybdenum,Technetium,Ruthenium,Rhodium,Palladium,Silver,Cadmium,Indium,Tin,Antimony,Tellurium,Iodine,Xenon,Cesium,Barium,Lanthanum,Cerium,Praseodymium,Neodymium,Promethium,Samarium,Europium,Gadolinium,Terbium,Dysprosium,Holmium,Erbium,Thulium,Ytterbium,Lutetium,Hafnium,Tantalum,Tungsten,Rhenium,Osmium,Iridium,Platinum,Gold,Mercury,Thallium,Lead,Bismuth,Polonium,Astatine,Radon,Francium,Radium,Actinium,Thorium,Protactinium,Uranium,Neptunium,Plutonium,Americium,Curium,Berkelium,Californium,Einsteinium,Fermium,Mendelevium,Nobelium,Lawrencium,Rutherfordium,Dubnium,Seaborgium,Bohrium,Hassium,Meitnerium,Darmstadtium,Roentgenium,Copernicium,Nihonium,Flerovium,Moscovium,Livermorium,Tennessine,Oganesson".split(",");
+const CATS=[["Alkali metal",0],["Alkaline earth",28],["Transition metal",215],["Post-transition metal",180],["Metalloid",150],["Nonmetal",95],["Halogen",265],["Noble gas",305],["Lanthanide",55],["Actinide",335]];
+const cat=z=>[3,11,19,37,55,87].includes(z)?0:[4,12,20,38,56,88].includes(z)?1:[9,17,35,53,85,117].includes(z)?6:[2,10,18,36,54,86,118].includes(z)?7:[1,6,7,8,15,16,34].includes(z)?5:[5,14,32,33,51,52].includes(z)?4:(z>=57&&z<=71)?8:(z>=89&&z<=103)?9:((z>=21&&z<=30)||(z>=39&&z<=48)||(z>=72&&z<=80)||(z>=104&&z<=112))?2:3;
+function pos(z){if(z==1)return[1,1];if(z==2)return[1,18];if(z<5)return[2,z-2];if(z<11)return[2,z+8];if(z<13)return[3,z-10];if(z<19)return[3,z];if(z<37)return[4,z-18];if(z<55)return[5,z-36];if(z<57)return[6,z-54];if(z<71)return[9,z-54];if(z<87)return[6,z-68];if(z<89)return[7,z-86];if(z<103)return[10,z-86];return[7,z-100]}
+const T={c:"Covalent (nonpolar)",p:"Polar covalent",i:"Ionic"};
+const TM={"nonpolar covalent":"c","polar covalent":"p","ionic":"i"};
+const DATA=CP.map(c=>[c.formula,esc(c.name),TM[c.type]||"c",esc(c.description)]);
+const F=f=>f.replace(/(\d+)/g,"<sub>$1</sub>");
+const key=c=>Object.keys(c).sort().map(k=>k+c[k]).join("");
+function parse(f){const c={};f.replace(/([A-Z][a-z]?)(\d*)/g,(m,s,n)=>{c[s]=(c[s]||0)+(+n||1)});return c}
+const LIB={};DATA.forEach(d=>{const c=parse(d[0]);LIB[key(c)]={f:d[0],n:d[1],t:d[2],d:d[3],size:Object.values(c).reduce((a,b)=>a+b,0)}});
+const $=id=>document.getElementById(id),bench=$("bench");
+let atoms=[],target=null;
+$("pt").innerHTML=SYM.map((s,i)=>{const z=i+1,p=pos(z);return `<button class="t" data-z="${z}" style="grid-row:${p[0]};grid-column:${p[1]};--h:${CATS[cat(z)][1]}" aria-label="${NM[i]}"><small>${z}</small><b>${s}</b></button>`}).join("");
+$("legend").innerHTML=CATS.map(c=>`<span><i style="--h:${c[1]}"></i>${c[0]}</span>`).join("");
+const inB=(x,y)=>{const r=bench.getBoundingClientRect();return x>=r.left&&x<=r.right&&y>=r.top&&y<=r.bottom};
+const OV={24:[2,8,13,1],29:[2,8,18,1],41:[2,8,18,12,1],42:[2,8,18,13,1],44:[2,8,18,15,1],45:[2,8,18,16,1],46:[2,8,18,18],47:[2,8,18,18,1],57:[2,8,18,18,9,2],58:[2,8,18,19,9,2],64:[2,8,18,25,9,2],78:[2,8,18,32,17,1],79:[2,8,18,32,18,1],89:[2,8,18,32,18,9,2],90:[2,8,18,32,18,10,2],91:[2,8,18,32,20,9,2],92:[2,8,18,32,21,9,2],93:[2,8,18,32,22,9,2],96:[2,8,18,32,25,9,2]};
+function shells(z){if(OV[z])return OV[z];const cap=[2,2,6,2,6,2,10,6,2,10,6,2,14,10,6,2,14,10,6],nq=[1,2,2,3,3,4,3,4,5,4,5,6,4,5,6,7,5,6,7],s=[0,0,0,0,0,0,0];let l=z;for(let i=0;i<19&&l>0;i++){const k=Math.min(cap[i],l);s[nq[i]-1]+=k;l-=k}return s.filter(x=>x>0)}
+function atomSVG(z,sz){const sh=shells(z),n=sh.length,h=CATS[cat(z)][1],nr=n>4?8:10,st=n>1?(31-nr-4)/(n-1):0,er=n>5?1.2:1.8;let o="";
+sh.forEach((k,i)=>{const r=n===1?24:nr+4+i*st,d=14+i*5;o+=`<circle r="${r}" fill="none" stroke="currentColor" stroke-opacity=".3" stroke-width=".6"/><g class="orb" style="animation-duration:${d}s;animation-direction:${i%2?"reverse":"normal"}">`;for(let j=0;j<k;j++){const a=2*Math.PI*j/k+i;o+=`<circle cx="${(r*Math.cos(a)).toFixed(1)}" cy="${(r*Math.sin(a)).toFixed(1)}" r="${er}" fill="#2f7de1"/>`}o+="</g>"});
+return `<svg viewBox="-32 -32 64 64" width="${sz}" height="${sz}" aria-hidden="true">${o}<circle r="${nr}" fill="hsl(${h} 65% 68%)" stroke="hsl(${h} 45% 35%)" stroke-width="1"/><text text-anchor="middle" dominant-baseline="central" font-family="Georgia,serif" font-weight="700" font-size="${nr>8?9:7.5}" fill="#10202e">${SYM[z-1]}</text></svg>`}
+const APP={},DESC={};for(const k in EL){if(EL[k].color)APP[k]=EL[k].color;if(EL[k].description)DESC[k]=esc(EL[k].description)}
+const DEF=["#c8ccd2","#c6c9cd","#a9b0b8","#b4bac2","#7b828c","#8a8f98","#b9c96a","#b79cff","#c0c4c8","#8f949a"];
+const CD=["Very reactive soft metal that loses one electron easily.","Reactive metal that loses two electrons to form 2+ ions.","Metal with several oxidation states that often forms colored compounds.","Softer metal with a lower melting point than the transition metals.","Properties fall between metals and nonmetals; often a semiconductor.","Poor conductor that tends to gain or share electrons.","Highly reactive nonmetal that forms salts with metals.","Very unreactive gas with a full outer electron shell.","Soft, silvery rare-earth metal used in magnets and lasers.","Radioactive metal; most are synthetic or very rare."];
+
+const stateOf=z=>z>=104?"unknown":[1,2,7,8,9,10,17,18,36,54,86].includes(z)?"gas":(z===35||z===80)?"liquid":"solid";
+function illus(z){const c=APP[SYM[z-1]]||DEF[cat(z)],s=stateOf(z);let b;
+if(s==="gas")b=`<path d="M50 20h20v24l27 46a8 8 0 0 1-7 12H30a8 8 0 0 1-7-12l27-46z" fill="${c}" fill-opacity=".5" stroke="#9fb3c8" stroke-width="2.5"/><circle cx="52" cy="76" r="9" fill="#fff" fill-opacity=".22"/><circle cx="72" cy="64" r="6" fill="#fff" fill-opacity=".22"/><circle cx="64" cy="88" r="5" fill="#fff" fill-opacity=".22"/>`;
+else if(s==="liquid")b=`<ellipse cx="60" cy="98" rx="38" ry="7" fill="${c}" fill-opacity=".7"/><path d="M60 22C46 44 34 58 34 74a26 26 0 0 0 52 0C86 58 74 44 60 22z" fill="${c}"/><ellipse cx="50" cy="68" rx="5" ry="10" fill="#fff" fill-opacity=".4"/>`;
+else b=`<ellipse cx="60" cy="100" rx="40" ry="6" fill="#000" fill-opacity=".35"/><polygon points="28,80 46,48 76,40 94,66 82,94 44,96" fill="${c}"/><polygon points="46,48 76,40 94,66 62,62" fill="#fff" fill-opacity=".3"/><polygon points="44,96 62,62 94,66 82,94" fill="#000" fill-opacity=".28"/><polygon points="28,80 46,48 62,62 44,96" fill="#000" fill-opacity=".1"/>`;
+return `<svg class="spec" viewBox="0 0 120 120" aria-hidden="true"><rect width="120" height="120" fill="#1b2733"/>${b}</svg>`}
+window.fb=(el,z)=>{el.outerHTML=illus(z)};
+function specimen(z){const e=EL[SYM[z-1]]||{};return e.image?`<img class="spec" alt="${NM[z-1]} sample" src="${esc(e.image)}" onerror="fb(this,${z})">`:illus(z)}
+function cap(z){const e=EL[SYM[z-1]]||{};return e.image?esc(e.credit||""):"Illustration of typical appearance, not a photo."}
+function tipHTML(z){const c=cat(z),s=stateOf(z),r=pos(z),g=r[0]>8?"Period "+(r[0]-3)+", f-block":"Group "+r[1]+", period "+r[0],st=s==="gas"?"Gas at room temperature":s==="liquid"?"Liquid at room temperature":s==="solid"?"Solid at room temperature":"State unconfirmed";
+return specimen(z)+`<div><div class="nm">${NM[z-1]} <span class="mute">${SYM[z-1]}</span></div><div class="mute">Atomic number ${z}, ${CATS[c][0].toLowerCase()}</div><div class="mute">${g}</div><div class="mute">${st}</div><div class="mute">Electron shells: ${shells(z).join(", ")}</div></div><p>${DESC[SYM[z-1]]||CD[c]+(z>=104?" Synthetic, made a few atoms at a time.":"")}</p><p class="mute">${cap(z)}</p>`}
+let found={e:[],m:[]},toastT;
+try{const v=JSON.parse(localStorage.getItem("cb-found"));if(v&&v.e&&v.m)found=v}catch(e){}
+function save(){try{localStorage.setItem("cb-found",JSON.stringify(found))}catch(e){}$("cnt").textContent="("+(found.e.length+found.m.length)+")"}
+function toast(m){const t=$("toast");t.textContent=m;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>{t.hidden=true},2600)}
+function renderCol(){const tot=Object.keys(LIB).length;
+$("pCol").innerHTML=`<h2 class="sec">Elements <span class="mute">${found.e.length} of 118</span></h2>${found.e.length?"":'<p class="mute">Nothing yet. Add elements to the bench to start your collection.</p>'}<div class="cgrid">${SYM.map((s,i)=>found.e.includes(i+1)?`<button class="ct" data-z="${i+1}" style="--h:${CATS[cat(i+1)][1]}" aria-label="${NM[i]}"><small>${i+1}</small><b>${s}</b></button>`:`<div class="ct lock" aria-label="Undiscovered element"><b>?</b></div>`).join("")}</div>
+<h2 class="sec">Molecules and compounds <span class="mute">${found.m.length} of ${tot}</span></h2><div class="mgrid">${Object.keys(LIB).map(k=>{const m=LIB[k];return found.m.includes(k)?`<div class="card"><span class="nm">${m.n}</span><span class="fm">${F(m.f)}</span><span class="badge">${T[m.t]}</span><p>${m.d}</p></div>`:`<div class="card lock"><span class="nm">Undiscovered</span><p>${m.size} atoms, ${T[m.t].toLowerCase()}</p></div>`}).join("")}</div>`}
+function mk(z,cls){const e=document.createElement("div");e.className="atom "+(cls||"");e.dataset.z=z;e.innerHTML=atomSVG(z,64);return e}
+function place(a){a.el.style.left=a.x+"px";a.el.style.top=a.y+"px"}
+function addAtom(z,x,y){
+if(atoms.length>=40)return;
+const w=bench.clientWidth,h=bench.clientHeight;
+const a={z,x:x??40+Math.random()*(w-80),y:y??40+Math.random()*(h-80)};
+a.el=mk(z);a.el.setAttribute("aria-label",NM[z-1]);bench.appendChild(a.el);atoms.push(a);place(a);
+a.el.onpointerdown=e=>{hideTip();e.preventDefault();a.el.setPointerCapture(e.pointerId);const r=bench.getBoundingClientRect(),dx=a.x-(e.clientX-r.left),dy=a.y-(e.clientY-r.top);
+a.el.onpointermove=ev=>{if(!a.el.hasPointerCapture(ev.pointerId))return;a.x=ev.clientX-r.left+dx;a.y=ev.clientY-r.top+dy;place(a);a.el.style.opacity=out(a)?.35:1;analyze()};
+a.el.onpointerup=a.el.onpointercancel=()=>{a.el.onpointermove=null;if(out(a))rm(a);else analyze(true)}};
+a.el.ondblclick=()=>rm(a);
+if(!found.e.includes(z)){found.e.push(z);save();toast("New element: "+NM[z-1])}
+analyze(true)}
+const out=a=>a.x<0||a.y<0||a.x>bench.clientWidth||a.y>bench.clientHeight;
+function rm(a){a.el.remove();atoms=atoms.filter(x=>x!==a);analyze(true)}
+// drag from table (mouse/pen); tap adds on touch; Enter adds on keyboard
+$("pt").addEventListener("pointerdown",e=>{
+const t=e.target.closest(".t");if(!t||(e.pointerType!=="mouse"&&e.pointerType!=="pen"))return;
+e.preventDefault();hideTip();const z=+t.dataset.z;let g=null;
+const mv=ev=>{if(!g&&Math.hypot(ev.clientX-e.clientX,ev.clientY-e.clientY)>6){g=mk(z,"ghost");document.body.appendChild(g)}
+if(g){g.style.left=ev.clientX+"px";g.style.top=ev.clientY+"px";bench.classList.toggle("over",inB(ev.clientX,ev.clientY))}};
+const up=ev=>{removeEventListener("pointermove",mv);removeEventListener("pointerup",up);bench.classList.remove("over");
+if(g){g.remove();if(inB(ev.clientX,ev.clientY)){const r=bench.getBoundingClientRect();addAtom(z,ev.clientX-r.left,ev.clientY-r.top)}}else addAtom(z)};
+addEventListener("pointermove",mv);addEventListener("pointerup",up)});
+$("pt").addEventListener("click",e=>{const t=e.target.closest(".t");if(!t||e.pointerType==="mouse"||e.pointerType==="pen")return;addAtom(+t.dataset.z)});
+function analyze(commit){
+const n=atoms.length,p=atoms.map((_,i)=>i);
+const find=i=>p[i]===i?i:(p[i]=find(p[i]));
+let lines="";
+for(let i=0;i<n;i++)for(let j=i+1;j<n;j++){if(Math.hypot(atoms[i].x-atoms[j].x,atoms[i].y-atoms[j].y)<58){p[find(i)]=find(j);lines+=`<line x1="${atoms[i].x}" y1="${atoms[i].y}" x2="${atoms[j].x}" y2="${atoms[j].y}"/>`}}
+$("bonds").innerHTML=lines;$("hint").hidden=n>0;
+const cl={};atoms.forEach((a,i)=>{(cl[find(i)]=cl[find(i)]||[]).push(a)});
+const groups=Object.values(cl).sort((a,b)=>b.length-a.length);
+let h="",solo={},hit=false;
+groups.forEach(g=>{
+if(g.length===1){const s=SYM[g[0].z-1];solo[s]=(solo[s]||0)+1;return}
+const c={};g.forEach(a=>{const s=SYM[a.z-1];c[s]=(c[s]||0)+1});
+const k=key(c),m=LIB[k];
+if(m){if(target&&LIB[target]===m)hit=true;if(commit&&!found.m.includes(k)){found.m.push(k);save();toast("New molecule: "+m.n)}
+h+=`<div class="card"><span class="nm">${m.n}</span><span class="fm">${F(m.f)}</span><span class="badge">${T[m.t]}</span><p>${m.d}</p></div>`}
+else{const ks=Object.keys(c).sort(),o=c.C?["C",...(c.H?["H"]:[]),...ks.filter(x=>x!=="C"&&x!=="H")]:ks;
+h+=`<div class="card"><span class="nm">Not in this library</span><span class="fm">${F(o.map(s=>s+(c[s]>1?c[s]:"")).join(""))}</span><p>This may not be a stable molecule, or it may be one this tool doesn’t include. Check each element’s valence electrons and see whether the bonds would fill every octet.</p></div>`}});
+const so=Object.entries(solo);
+if(so.length)h+=`<p class="mute">Unbonded atoms: ${so.map(([s,v])=>s+" ×"+v).join(", ")}. Drag them together until they touch to bond.</p>`;
+if(!n)h=`<p class="mute">Results appear here. Try combining two hydrogen atoms with one oxygen.</p>`;
+$("res").innerHTML=h;
+if(target){const c=$("chal");if(hit){c.className="ok";c.textContent="You built "+LIB[target].n+". Nice work."}else{c.className="";c.innerHTML=`Challenge: build <b>${LIB[target].n}</b> (${LIB[target].size} atoms)`}}}
+$("ch").onclick=()=>{const ks=Object.keys(LIB).filter(k=>LIB[k].size<=9);target=ks[Math.floor(Math.random()*ks.length)];$("hn").hidden=false;analyze()};
+$("hn").onclick=()=>{$("chal").innerHTML+=` — formula: ${F(LIB[target].f)}`};
+$("clr").onclick=()=>{atoms.forEach(a=>a.el.remove());atoms=[];analyze()};
+analyze();
+const tip=$("tip");let tipT;
+function hideTip(){tip.hidden=true}
+function showTip(z,el){tip.innerHTML=tipHTML(z);tip.hidden=false;const r=el.getBoundingClientRect(),w=tip.offsetWidth,h=tip.offsetHeight;let x=r.right+10,y=r.top;
+if(x+w>innerWidth-8)x=r.left-w-10;
+if(x<8){x=Math.min(Math.max(8,r.left),innerWidth-w-8);y=r.bottom+8;if(y+h>innerHeight-8)y=r.top-h-8}
+if(y+h>innerHeight-8)y=innerHeight-h-8;
+tip.style.left=x+"px";tip.style.top=Math.max(8,y)+"px"}
+document.addEventListener("pointerover",e=>{const t=e.target.closest&&e.target.closest("[data-z]");if(t&&!document.querySelector(".ghost")){showTip(+t.dataset.z,t);if(e.pointerType==="touch"){clearTimeout(tipT);tipT=setTimeout(hideTip,2500)}}});
+document.addEventListener("pointerout",e=>{const t=e.target.closest&&e.target.closest("[data-z]");if(t&&e.pointerType!=="touch"&&!(e.relatedTarget&&t.contains(e.relatedTarget)))hideTip()});
+document.addEventListener("focusin",e=>{const t=e.target.closest("[data-z]");if(t)showTip(+t.dataset.z,t)});
+document.addEventListener("focusout",hideTip);
+function tab(n){const b=n==="b";$("pBuild").hidden=!b;$("pCol").hidden=b;$("tb").setAttribute("aria-selected",b);$("tc").setAttribute("aria-selected",!b);hideTip();if(!b)renderCol()}
+$("tb").onclick=()=>tab("b");$("tc").onclick=()=>tab("c");
+save();
+}).catch(err=>{console.error(err);document.querySelector(".wrap").insertAdjacentHTML("afterbegin",'<p class="card">The data files could not be loaded. If you opened this file directly from your computer, serve the folder with a local web server (see README.md) or use GitHub Pages.</p>')});
+</script>
+</body>
+</html>

@@ -1,0 +1,296 @@
+[
+  {
+    "formula": "H2",
+    "name": "Hydrogen gas",
+    "type": "nonpolar covalent",
+    "description": "Single bond; the lightest molecule."
+  },
+  {
+    "formula": "O2",
+    "name": "Oxygen gas",
+    "type": "nonpolar covalent",
+    "description": "Double bond; the gas you breathe."
+  },
+  {
+    "formula": "N2",
+    "name": "Nitrogen gas",
+    "type": "nonpolar covalent",
+    "description": "Triple bond makes it very unreactive; most of air."
+  },
+  {
+    "formula": "Cl2",
+    "name": "Chlorine gas",
+    "type": "nonpolar covalent",
+    "description": "Single bond; toxic yellow-green gas used to disinfect."
+  },
+  {
+    "formula": "O3",
+    "name": "Ozone",
+    "type": "nonpolar covalent",
+    "description": "Bent; absorbs UV high in the atmosphere."
+  },
+  {
+    "formula": "H2O",
+    "name": "Water",
+    "type": "polar covalent",
+    "description": "Bent, 104.5°. Hydrogen bonds give it a high boiling point."
+  },
+  {
+    "formula": "H2O2",
+    "name": "Hydrogen peroxide",
+    "type": "polar covalent",
+    "description": "Has an O–O single bond; a mild oxidizer."
+  },
+  {
+    "formula": "CO2",
+    "name": "Carbon dioxide",
+    "type": "polar covalent",
+    "description": "Linear. The polar bonds cancel, so the molecule is nonpolar."
+  },
+  {
+    "formula": "CO",
+    "name": "Carbon monoxide",
+    "type": "polar covalent",
+    "description": "Triple bond; binds hemoglobin and blocks oxygen transport."
+  },
+  {
+    "formula": "CH4",
+    "name": "Methane",
+    "type": "nonpolar covalent",
+    "description": "Tetrahedral, 109.5°; the main part of natural gas."
+  },
+  {
+    "formula": "NH3",
+    "name": "Ammonia",
+    "type": "polar covalent",
+    "description": "Trigonal pyramidal; the nitrogen lone pair makes it a base."
+  },
+  {
+    "formula": "HCl",
+    "name": "Hydrogen chloride",
+    "type": "polar covalent",
+    "description": "Dissolves in water to make hydrochloric acid, a strong acid."
+  },
+  {
+    "formula": "HF",
+    "name": "Hydrogen fluoride",
+    "type": "polar covalent",
+    "description": "Strong hydrogen bonding; a weak acid in water."
+  },
+  {
+    "formula": "H2S",
+    "name": "Hydrogen sulfide",
+    "type": "polar covalent",
+    "description": "Bent; smells like rotten eggs."
+  },
+  {
+    "formula": "SO2",
+    "name": "Sulfur dioxide",
+    "type": "polar covalent",
+    "description": "Bent; a cause of acid rain."
+  },
+  {
+    "formula": "NO2",
+    "name": "Nitrogen dioxide",
+    "type": "polar covalent",
+    "description": "Bent brown gas with an unpaired electron."
+  },
+  {
+    "formula": "H2SO4",
+    "name": "Sulfuric acid",
+    "type": "polar covalent",
+    "description": "Strong diprotic acid; the most-produced industrial chemical."
+  },
+  {
+    "formula": "HNO3",
+    "name": "Nitric acid",
+    "type": "polar covalent",
+    "description": "Strong acid and oxidizer."
+  },
+  {
+    "formula": "H3PO4",
+    "name": "Phosphoric acid",
+    "type": "polar covalent",
+    "description": "Triprotic acid found in colas and fertilizers."
+  },
+  {
+    "formula": "NaCl",
+    "name": "Sodium chloride",
+    "type": "ionic",
+    "description": "Table salt; sodium gives up one electron to chlorine."
+  },
+  {
+    "formula": "KCl",
+    "name": "Potassium chloride",
+    "type": "ionic",
+    "description": "Ionic salt and a key electrolyte."
+  },
+  {
+    "formula": "LiF",
+    "name": "Lithium fluoride",
+    "type": "ionic",
+    "description": "Ionic with a very high lattice energy."
+  },
+  {
+    "formula": "MgO",
+    "name": "Magnesium oxide",
+    "type": "ionic",
+    "description": "Mg²⁺ and O²⁻ ions; very high melting point."
+  },
+  {
+    "formula": "CaO",
+    "name": "Calcium oxide",
+    "type": "ionic",
+    "description": "Quicklime, made by heating limestone."
+  },
+  {
+    "formula": "Na2O",
+    "name": "Sodium oxide",
+    "type": "ionic",
+    "description": "Basic oxide that reacts with water to form a base."
+  },
+  {
+    "formula": "Al2O3",
+    "name": "Aluminum oxide",
+    "type": "ionic",
+    "description": "Protective layer on aluminum; also the mineral corundum."
+  },
+  {
+    "formula": "Fe2O3",
+    "name": "Iron(III) oxide",
+    "type": "ionic",
+    "description": "Rust and the ore hematite."
+  },
+  {
+    "formula": "ZnO",
+    "name": "Zinc oxide",
+    "type": "ionic",
+    "description": "Used in sunscreen."
+  },
+  {
+    "formula": "CuO",
+    "name": "Copper(II) oxide",
+    "type": "ionic",
+    "description": "Black solid formed when copper is heated in air."
+  },
+  {
+    "formula": "MgCl2",
+    "name": "Magnesium chloride",
+    "type": "ionic",
+    "description": "One Mg²⁺ balances two Cl⁻ ions."
+  },
+  {
+    "formula": "CaCl2",
+    "name": "Calcium chloride",
+    "type": "ionic",
+    "description": "Road de-icer and drying agent."
+  },
+  {
+    "formula": "CaF2",
+    "name": "Calcium fluoride",
+    "type": "ionic",
+    "description": "The mineral fluorite."
+  },
+  {
+    "formula": "AgCl",
+    "name": "Silver chloride",
+    "type": "ionic",
+    "description": "Insoluble white solid that precipitates from solution."
+  },
+  {
+    "formula": "NaOH",
+    "name": "Sodium hydroxide",
+    "type": "ionic",
+    "description": "Strong base made of Na⁺ and OH⁻ ions."
+  },
+  {
+    "formula": "KOH",
+    "name": "Potassium hydroxide",
+    "type": "ionic",
+    "description": "Strong base used in soap making."
+  },
+  {
+    "formula": "CaCO3",
+    "name": "Calcium carbonate",
+    "type": "ionic",
+    "description": "Limestone, chalk and seashells."
+  },
+  {
+    "formula": "NaHCO3",
+    "name": "Sodium bicarbonate",
+    "type": "ionic",
+    "description": "Baking soda; a mild base."
+  },
+  {
+    "formula": "NH4Cl",
+    "name": "Ammonium chloride",
+    "type": "ionic",
+    "description": "Salt of ammonia and hydrochloric acid."
+  },
+  {
+    "formula": "SiO2",
+    "name": "Silicon dioxide",
+    "type": "nonpolar covalent",
+    "description": "Network solid: quartz and sand."
+  },
+  {
+    "formula": "CH3OH",
+    "name": "Methanol",
+    "type": "polar covalent",
+    "description": "The simplest alcohol."
+  },
+  {
+    "formula": "C2H5OH",
+    "name": "Ethanol",
+    "type": "polar covalent",
+    "description": "The alcohol in drinks; the –OH group allows hydrogen bonding."
+  },
+  {
+    "formula": "CH3COOH",
+    "name": "Acetic acid",
+    "type": "polar covalent",
+    "description": "Weak acid that makes vinegar sour."
+  },
+  {
+    "formula": "C2H6",
+    "name": "Ethane",
+    "type": "nonpolar covalent",
+    "description": "All single bonds."
+  },
+  {
+    "formula": "C2H4",
+    "name": "Ethene",
+    "type": "nonpolar covalent",
+    "description": "Has a C=C double bond; planar."
+  },
+  {
+    "formula": "C2H2",
+    "name": "Ethyne",
+    "type": "nonpolar covalent",
+    "description": "Has a C≡C triple bond; linear."
+  },
+  {
+    "formula": "C3H8",
+    "name": "Propane",
+    "type": "nonpolar covalent",
+    "description": "A common fuel gas."
+  },
+  {
+    "formula": "C6H6",
+    "name": "Benzene",
+    "type": "nonpolar covalent",
+    "description": "Aromatic ring with delocalized electrons."
+  },
+  {
+    "formula": "C6H12O6",
+    "name": "Glucose",
+    "type": "polar covalent",
+    "description": "The main fuel for cells; made in photosynthesis."
+  },
+  {
+    "formula": "C12H22O11",
+    "name": "Sucrose",
+    "type": "polar covalent",
+    "description": "Table sugar: glucose joined to fructose."
+  }
+]
